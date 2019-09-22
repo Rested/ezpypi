@@ -16,6 +16,7 @@ resource "digitalocean_droplet" "ezpypi" {
   name     = "ezpypi"
   region   = "lon1"
   size     = "512mb"
+  backups  = true
   ssh_keys = ["${digitalocean_ssh_key.default.fingerprint}"]
 
   provisioner "remote-exec" {

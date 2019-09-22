@@ -1,8 +1,15 @@
-# Ezpypi
+# Ezpypi - An easy to setup pypiserver
 
-## An easy to install pypi server
+Uses Terraform to provision a digital ocean droplet running a persistent [pypiserver](https://github.com/pypiserver/pypiserver) via nginx complete with caching, and backups.
 
-Steps:
+Predicted price: $6/month
+
+### Pre-requisits
+
+You will need a digital ocean account, complete with an api key.
+
+### Steps
+Setup the basics
 ```bash
 cp .env.sample .env
 # Now change the values to what you want
@@ -16,6 +23,7 @@ Now set up your password for the server
 htpasswd -sc htpasswd.txt <your-name>
 # enter the password you want to use to log in to your pypi with. See https://github.com/pypiserver/pypiserver#upload-with-setuptools
 ```
+Run terraform
 ```bash
 export $(grep -v '^#' .env | xargs -d '\n')
 terraform init # get providers installed

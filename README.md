@@ -21,8 +21,9 @@ ssh-add /path/to/generated/sshkey
 Now set up your password for the server
 ```bash
 htpasswd -sc htpasswd.txt <your-name>
-# enter the password you want to use to log in to your pypi with. See https://github.com/pypiserver/pypiserver#upload-with-setuptools
+# enter the password you want to use to log in to your pypi with.
 ```
+See https://github.com/pypiserver/pypiserver#upload-with-setuptools for usage of your new username and password.
 Run terraform
 ```bash
 export $(grep -v '^#' .env | xargs -d '\n')

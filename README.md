@@ -2,7 +2,7 @@
 
 Uses Terraform to provision a digital ocean droplet running a persistent [pypiserver](https://github.com/pypiserver/pypiserver) via nginx complete with caching, and backups.
 
-Predicted price: $6/month
+Predicted cost: $6/month
 
 ### Pre-requisits
 

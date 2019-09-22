@@ -12,20 +12,64 @@ provider "digitalocean" {
 
 
 resource "digitalocean_droplet" "ezpypi" {
-  image = "docker-18-04"
-  name = "ezpypi"
-  region = "lon1"
-  size = "512mb"
+  image    = "docker-18-04"
+  name     = "ezpypi"
+  region   = "lon1"
+  size     = "512mb"
   ssh_keys = ["${digitalocean_ssh_key.default.fingerprint}"]
+
   provisioner "remote-exec" {
     inline = [
-      "docker run -d -p 80:8080 pypiserver/pypiserver:latest"
+      "mkdir /ezpypi"
     ]
 
     connection {
-      type     = "ssh"
-      user     = "root"
-      host     = "${digitalocean_droplet.ezpypi.ipv4_address}"
+      host  = "${digitalocean_droplet.ezpypi.ipv4_address}"
+      agent = true
+    }
+  }
+  provisioner "file" {
+    source      = "./htpasswd.txt"
+    destination = "/ezpypi/htpasswd.txt"
+    connection {
+      host  = "${digitalocean_droplet.ezpypi.ipv4_address}"
+      agent = true
+    }
+  }
+
+  provisioner "file" {
+    source      = "./docker-compose.yml"
+    destination = "/ezpypi/docker-compose.yml"
+    connection {
+      host  = "${digitalocean_droplet.ezpypi.ipv4_address}"
+      agent = true
+    }
+  }
+
+  provisioner "file" {
+    source      = "./nginx.conf"
+    destination = "/ezpypi/nginx.conf"
+    connection {
+      host  = "${digitalocean_droplet.ezpypi.ipv4_address}"
+      agent = true
+    }
+  }
+
+  provisioner "file" {
+    source      = "./ezpypi.service"
+    destination = "/etc/systemd/system/ezpypi.service"
+    connection {
+      host  = "${digitalocean_droplet.ezpypi.ipv4_address}"
+      agent = true
+    }
+  }
+  provisioner "remote-exec" {
+    inline = [
+      "systemctl enable ezpypi && systemctl start ezpypi"
+    ]
+
+    connection {
+      host  = "${digitalocean_droplet.ezpypi.ipv4_address}"
       agent = true
     }
   }
@@ -33,13 +77,13 @@ resource "digitalocean_droplet" "ezpypi" {
 
 # Create a new domain record
 resource "digitalocean_domain" "ezpypi" {
-  name = "${var.hostname}"
+  name       = "${var.hostname}"
   ip_address = "${digitalocean_droplet.ezpypi.ipv4_address}"
 }
 
 resource "digitalocean_record" "wildcard" {
   domain = "${digitalocean_domain.ezpypi.name}"
-  type = "CNAME"
-  name = "*"
-  value = "@"
+  type   = "CNAME"
+  name   = "*"
+  value  = "@"
 }

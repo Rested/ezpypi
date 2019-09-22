@@ -10,8 +10,18 @@ eval `ssh-agent` # to ensure ssh-agent is running
 ssh-keygen # not necessary if you already have a passwordless ssh key
 ssh-add /path/to/generated/sshkey
 # ensure that the public_key in main.tf is pointing to this key
+```
+Now set up your password for the server
+```bash
+htpasswd -sc htpasswd.txt <your-name>
+# enter the password you want to use to log in to your pypi with. See https://github.com/pypiserver/pypiserver#upload-with-setuptools
+```
+```bash
 export $(grep -v '^#' .env | xargs -d '\n')
 terraform init # get providers installed
 terraform plan # check everything seems reasonable
 terraform apply # get it up in the cloud!
 ```
+
+## Todos:
+ * HTTPS https://www.terraform.io/docs/providers/acme/index.html + https://github.com/pypiserver/pypiserver#supporting-https

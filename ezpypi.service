@@ -1,0 +1,20 @@
+[Unit]
+Description=Runs ezpypi with docker compose
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+
+WorkingDirectory=/ezpypi
+
+# Make sure all is down
+ExecStartPre=/usr/local/bin/docker-compose down
+# Compose up
+ExecStart=/usr/local/bin/docker-compose up
+
+# Compose down, remove containers and volumes
+ExecStop=/usr/bin/docker-compose down
+
+[Install]
+WantedBy=multi-user.target

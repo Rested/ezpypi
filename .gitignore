@@ -1,3 +1,5 @@
 .env
 .terraform
 terraform.tfstate*
+htpasswd.txt
+.terraform.tfstate.lock.info

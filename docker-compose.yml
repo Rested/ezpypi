@@ -1,0 +1,22 @@
+version: '3.3'
+
+services:
+  pypiserver:
+    image: pypiserver/pypiserver
+    restart: always
+    command: -p 8000 -P /data/auth/.htpasswd -a update,download,list /data/packages
+    volumes: 
+      - ./htpasswd.txt:/data/auth/.htpasswd # copy over auth creds
+      - ./data:/data/packages # so data is preserved
+
+  nginx:
+    image: nginx
+    restart: always
+    depends_on:
+      - pypiserver
+    volumes:
+      - ./cache:/data/nginx/cache
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 80:80
+

@@ -1,4 +1,4 @@
-# Ezpypi - An easy to setup pypiserver
+# ezpypi - An easy to setup pypiserver
 
 Uses Terraform to provision a digital ocean droplet running a persistent [pypiserver](https://github.com/pypiserver/pypiserver) via nginx complete with caching, and backups.
 
